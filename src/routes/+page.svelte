@@ -64,6 +64,11 @@
                     <span class="column"></span>
                     <span class="right column">Patch: {build.patch}</span>
                 </div>
+                <div class="tags">
+                    {#each build.tags as tag}
+                        <span class="tag">{tag}</span>
+                    {/each}
+                </div>
             </a>
         </div>
     {/each}
@@ -148,4 +153,20 @@
     .right {
         text-align: right;
     }
+
+    .tags {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 0.5rem;
+	margin-top: 1rem;
+
+	.tag {
+		background-color: var(--primary);
+		color: rgb(0, 0, 0);
+		padding: 0.3em 0.6em;
+		border-radius: 0.3em;
+		font-size: 0.9rem;
+	}
+}
+
 </style>

@@ -6,12 +6,23 @@
 	import { img_name } from '$lib';
 
 	const { data } = $props();
-	const { characters, skills, runes, build: orig_build } = data;
+	const { characters, skills, runes, tags, build: orig_build } = data;
 
-	let build = $state(orig_build);
+	type Build = Omit<typeof orig_build, 'tags'> & { tags: string[] };
+
+	let build: Build = $state(orig_build);
 	let editable = $state(false);
 	let dirty = $derived(JSON.stringify(orig_build) !== JSON.stringify(build));
 	let ndx = 0;
+
+	function toggleTag(tag: string) {
+		if (build.tags.includes(tag)) {
+			build.tags = build.tags.filter((t: string) => t !== tag);
+		} else {
+			build.tags = [...build.tags, tag];
+		}
+	}	
+
 
 	function reset() {
 		build = orig_build;
@@ -65,7 +76,11 @@
 </script>
 
 <div class="build">
-	<h1>{build.name}</h1>
+	{#if editable}
+		<input type="text" bind:value={build.name} class="input is-large" placeholder="Build name" />
+	{:else}
+		<h1>{build.name}</h1>
+	{/if}
 
 	<div class="character center">
 		<img
@@ -124,6 +139,27 @@
 			{/each}
 		</div>
 	</div>
+
+	{#if editable}
+		<div class="field">
+			<!-- svelte-ignore a11y_label_has_associated_control -->
+			<label class="label">Tags</label>
+			<div class="tags are-medium">
+				{#each tags as tag}
+					<!-- svelte-ignore a11y_click_events_have_key_events -->
+					<span
+						role="button"
+						tabindex="0"
+						class="tag {build.tags.includes(tag) ? 'is-selected' : ''}"
+						onclick={() => toggleTag(tag)}
+					>
+						{tag}
+					</span>
+				{/each}
+			</div>
+		</div>
+	{/if}
+
 </div>
 
 <br />
@@ -280,6 +316,15 @@
 	}
 	.runes .tenacity .icon {
 		transform: translateY(0.4em);
+	}
+
+	.tag.is-selected {
+		background-color: var(--primary);
+		color: black;
+	}
+
+	.label {
+		color: white;
 	}
 
 	.stack {

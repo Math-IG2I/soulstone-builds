@@ -18,6 +18,7 @@ export type Build = {
     runes: object | any,
     notes: string,
     votes: number,
+    tags: string[] | any,
 }
 
 export function score(build: Build): number {

@@ -3,7 +3,7 @@ import fs from 'fs';
 import { redirect, type Load } from '@sveltejs/kit';
 
 import { db } from '$lib/server/database';
-import { characters, skills, runes } from '$lib/server/options';
+import { characters, skills, runes, tags } from '$lib/server/options';
 
 export const load: Load = async ({ params, cookies }: any) => {
 	let build = {
@@ -19,7 +19,8 @@ export const load: Load = async ({ params, cookies }: any) => {
 			versatility: ["", "", ""],
 			tenacity: ["", "", "", ""],
 		},
-		notes: ""
+		notes: "",
+		tags: [],
 	};
 
 	if (params.slug === "+") {
@@ -35,5 +36,5 @@ export const load: Load = async ({ params, cookies }: any) => {
 		build = db.get_build(params.slug).expect();
 	}
 
-	return { build, characters, skills, runes };
+	return { build, characters, skills, runes, tags };
 };
